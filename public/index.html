@@ -74,10 +74,82 @@
             </article>
     
             <article>
-                <h2>Chart</h2>
-                <p>
-                    <canvas id="myChart" width="400" height="400"></canvas>
-                </p>
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Personal Budget</title>
+                    <script src="https://d3js.org/d3.v3.min.js"></script>
+                </head>
+                <body>
+                    <h1>Personal Budget</h1>
+                    <div id="chart"></div>
+                
+                    <script>
+                        // Load budget data from the server
+                        fetch('http://localhost:3000/budget')
+                            .then(response => response.json())
+                            .then(data => {
+                                const budgetData = data.budget.map(item => ({
+                                    label: item.category,
+                                    value: item.amount
+                                }));
+                                renderChart(budgetData);
+                            })
+                            .catch(error => console.error('Error loading budget data:', error));
+                
+                        function renderChart(data) {
+                            const width = 480;
+                            const height = 250;
+                            const radius = Math.min(width, height) / 2;
+                
+                            const svg = d3.select("#chart")
+                                .append("svg")
+                                .attr("width", width)
+                                .attr("height", height)
+                                .append("g")
+                                .attr("transform", `translate(${width / 2}, ${height / 2})`);
+                
+                            const color = d3.scale.ordinal()
+                                .domain(data.map(d => d.label))
+                                .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+                
+                            const pie = d3.layout.pie()
+                                .sort(null)
+                                .value(d => d.value);
+                
+                            const arc = d3.svg.arc()
+                                .outerRadius(radius * 0.8)
+                                .innerRadius(0);
+                
+                            const slices = svg.selectAll("path.slice")
+                                .data(pie(data))
+                                .enter()
+                                .append("path")
+                                .attr("class", "slice")
+                                .attr("d", arc)
+                                .attr("fill", d => color(d.data.label));
+                
+                            const legend = svg.selectAll(".legend")
+                                .data(data)
+                                .enter()
+                                .append("g")
+                                .attr("class", "legend")
+                                .attr("transform", (d, i) => `translate(-40, ${i * 20 - radius})`);
+                
+                            legend.append("rect")
+                                .attr("x", width / 4)
+                                .attr("width", 18)
+                                .attr("height", 18)
+                                .style("fill", d => color(d.label));
+                
+                            legend.append("text")
+                                .attr("x", width / 4 + 24)
+                                .attr("y", 9)
+                                .attr("dy", ".35em")
+                                .text(d => d.label);
+                        }
+                    </script>
+                </body>
             </article>
 
         </section>
