@@ -3,12 +3,13 @@ import { ArticleComponent } from '../article/article.component';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Chart } from 'chart.js/auto';
+import { BreadcrumbsComponent } from '../breadcrumbs/breadcrumbs.component';
 
 
 @Component({
   selector: 'pb-homepage',
 
-  imports: [ArticleComponent],
+  imports: [ArticleComponent, BreadcrumbsComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './homepage.component.html',
   styleUrl: './homepage.component.scss',

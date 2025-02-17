@@ -5,6 +5,7 @@ import {Routes, RouterModule} from '@angular/router'
 import { Component } from '@angular/core';
 import { P404Component } from './p404/p404.component';
 import { AppComponent } from './app.component';
+import { ContactComponent } from './contact/contact.component';
 
 export const routes: Routes = [
     {
@@ -23,5 +24,8 @@ export const routes: Routes = [
     {
       path: '**',
       component: P404Component
-    }
+    },
+    { path: 'contact', 
+      component: ContactComponent 
+    },
   ];
